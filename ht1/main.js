@@ -42,6 +42,9 @@
 //   max = Math.floor(max);
 //   return Math.floor(Math.random() * (max - min + 1)) + min;
 // };
+var body = document.getElementsByTagName('body');
+var div = document.getElementsByClassName('currentColor');
+
 function getRandomColor() {
   var letters = '0123456789ABCDEF'.split('');
   var color = '#';
@@ -51,10 +54,31 @@ function getRandomColor() {
   return color;
 };
 
-window.onload = function () {
+function rand() {
   var c = getRandomColor();
-  var body = document.getElementsByTagName('body');
-  var div = document.getElementsByClassName('currentColor');
-  body[0].style.backgroundColor = c;
   div[0].innerText = c;
+  body[0].style.backgroundColor = c;
+  body[0].style.margin = 0;
+  body[0].style.padding = 0;
+  body[0].style.height = "-webkit-fill-available";
+  body[0].style.display = "flex";
+  body[0].style.justifyContent = "center";
+  body[0].style.alignItems = "center";
+  body[0].style.flexDirection = "column";
+  body[0].style.fontSize = "30px";
+  div[0].style.display = "flex";
+  div[0].style.flexDirection = "column";
+  div[0].style.alignItems = "center";
+  div[0].style.color = getRandomColor();
+  var createButton = document.createElement('button');
+  createButton.setAttribute('onclick','rand()');
+  createButton.innerText = 'randomise me'
+  div[0].appendChild(createButton);
+  createButton.style.borderRadius = "100px";
+  createButton.style.border = "0px";
+  createButton.style.height = "100px";
+  createButton.style.fontSize = "30px";
+  createButton.style.backgroundColor = getRandomColor();
+  createButton.style.color = getRandomColor();
 };
+window.onload = rand;
