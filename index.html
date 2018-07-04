@@ -1,42 +1,69 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>SPeech recognition</title>
-	<link rel="stylesheet" href="style.css">
+	<title>Constructor</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="main.css">
 </head>
 <body>
-	<div class="words" contenteditable="true">
-		
+	<header id="header">
+		<!-- <button class="editButton" id="headerEdit" style="left: 90%; top: 0;">Edit</button> -->
+	  	<div class="logo" id="logo">
+	    	<a href=""><img src="img/logo.png"</img></a>
+	  	</div>  
+	  	<nav id="nav"></nav>
+	</header>
+
+	<div class="content" id="content">
+		<div class="sidebar" id="sidebar"></div>
+		<div class="article" id="article"></div>
 	</div>
-//перехват видео get user media data
-	<script>
-		window.SpeechRecognition = window.SPeechRecognition || window.webkitSpeechRecognition;
-		var recognition = new SpeechRecognition(), 
-		p = document.createElement('p'),
-		words = document.querySelector('.words');
-		recognition.lang = 'en-US';
-		recognition.interimResults = true;
 
-		recognition.addEventListener('result', function (event) {
-			// console.log(event.results);
-			p.textContent = Array.from(event.results)
-			.map(function (result) {
-				return result[0];
-			})
-			.map(function (result) {
-				return result.transcript;
-			})
-			.join('');
-			// p.textContent = transcript;
-			words.appendChild(p);
+<div class="modal close" id="addmodal">
+		<p id="addmodalHeader"></p>
+		h1: <input type="text" id="aih1"></input><br>
+		text: <textarea id="aitxt"></textarea><br>
+		<div class="buttonsBlock">
+			<button class="modalButton" onclick="add()">add</button>
+			<button class="modalButton" onclick="discard()">discard</button>
+		</div>
+</div>
 
-			if(event.results[0].isFinal) {
-				p = document.createElement('p');
-				words.appendChild(p);
-			}
-		});
-		recognition.addEventListener('end', recognition.start);
-		recognition.start();
-	</script>
+<div class="modal close" id="addmenumodal">
+		<p id="addmenumodalHeader"></p>
+		menu name: <input type="text" id="amn"></input><br>
+		menu link: <textarea id="aml"></textarea><br>
+		<div class="buttonsBlock">
+			<button class="modalButton" onclick="addMenu()">add</button>
+			<button class="modalButton" onclick="discard()">discard</button>
+		</div>
+</div>
+
+<div class="modal close" id="editmodal">
+		<p id="editmodalHeader"></p>
+		h1:
+		<input type="text" id="eih1"></input><br>
+		text:
+		<textarea id="eitxt"></textarea><br>
+		<div class="buttonsBlock">
+			<button class="modalButton" onclick="save()">save</button>
+			<button class="modalButton" onclick="discard()">discard</button>
+			<button class="modalButton" onclick="remove()">remove block</button>
+		</div>
+</div>
+
+<div class="modal close" id="editheadermodal">
+		<p id="editheadermodalHeader"></p>
+
+		menu name: <input type="text" id="emn"></input><br>
+		menu link: <textarea id="eml"></textarea><br>
+		<div class="buttonsBlock" id="btnblc">
+			<button class="modalButton" onclick="save()">save</button>
+			<button class="modalButton" onclick="discard()">discard</button>
+			<button class="modalButton" onclick="remove()">remove block</button>
+		</div>
+</div>
+
+<script src="main.js"></script>
 </body>
 </html>
