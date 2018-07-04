@@ -1,84 +1,209 @@
-/*
 
-  Задание 1.
+var o = {}; //буфер для edit
+var oh = {}; //буфер для edit header
+var ob = {}; //буфер для add
+window.onload = function(){
+	if(!localStorage.counter){
+		localStorage.setItem('counter', 0);
+	};
+	if(!localStorage.menucounter){
+		localStorage.setItem('menucounter', 0);
+	}
 
-  Написать функцию которая будет задавать СЛУЧАЙНЫЙ цвет для фона.
-  Каждая перезагрузка страницы будет с новым цветом.
-  Для написания используйте функцию на получение случайного целого числа,
-  между минимальным и максимальным значением (Приложена снизу задания)
+	//выгрузка из localstorage
+	if(localStorage.nav){
+		load('nav');
+	};	
+	if(localStorage.sidebar) {
+		load('sidebar');
+	};
+	if(localStorage.article){
+		load('article');
+	};
 
-  + Бонус, повесить обработчик на кнопку через метод onClick
-  + Бонус, использовать 6-ричную систему исчесления и цвет HEX -> #FFCC00
-  + Бонус выводить полученый цвет по центру страницы.
-  Необходимо создать блок через createElement задать ему стили через element.style
-  и вывести через appendChild или insertBefore
+	addEvents();
+	addEmptyBlocks();
+}
 
-  Необходимые материалы:
-    Math.Random (Доки): https://developer.mozilla.org/uk/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-    function getRandomIntInclusive(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    __
-    Работа с цветом:
-    Вариант 1.
-      Исользовать element.style.background = 'rgb(r,g,b)';
-      где r,g,b случайное число от 0 до 256;
+function load(block) {//загружаем блоки
+	let tempsave = JSON.parse(localStorage[block]);
+	for (var i = 0; i < tempsave.length; i++){
+		let element = document.createElement('div');
+		document.getElementById(block).appendChild(element); 
+		element.outerHTML = tempsave[i];
+	}
+}
 
-    Вариант 2.
-      Исользовать element.style.background = '#RRGGBB';
-      где, RR, GG, BB, значние цвета в 16-ричной системе исчесления
-      Формирование цвета в вебе: https://ru.wikipedia.org/wiki/%D0%A6%D0%B2%D0%B5%D1%82%D0%B0_HTML
-      Перевод в 16-ричную систему исчесления делается при помощи
-      метода Number.toString( 16 ) https://www.w3schools.com/jsref/jsref_tostring_number.asp,
+function addEvents() {//назначаем кнопки edit
+	let editBtn = document.querySelectorAll('.editButton');
+		editBtn.forEach(function(item) {
+		item.addEventListener('click', function(e) {
+			// console.log(e.path[2].id)
+			if(e.path[2].id == 'nav') {
+				if (editheadermodal.classList.contains('close')){
+					editheadermodal.classList.toggle('close')
+					editheadermodalHeader.innerHTML = ("edit " + e.path[1].id + ":");
+				};
+			} else {
+				editmodal.classList.contains('close')
+				editmodal.classList.toggle('close')
+				editmodalHeader.innerHTML = ("edit " + e.path[1].id + ":");
+			}
+			//для тестов)
+			// o.path = e.path;
+			// console.log(o.path);
+			o.target = (e.path[1].id);
+			o.parent = (e.path[2].id);
+			// eih1.value = document.getElementById(o.target + 'h1').innerHTML;
+			// eitxt.value = document.getElementById(o.target + 'txt').innerHTML;
 
-      var myNumber = '251'
-      myNumber.toString(16) // fb
+		})
+	});
+}
 
-*/
-// function getRandom(min, max) {
-//   min = Math.ceil(min);
-//   max = Math.floor(max);
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// };
-var body = document.getElementsByTagName('body');
-var div = document.getElementsByClassName('currentColor');
+function addEmptyBlocks() {	
+	let emptyblock = document.createElement('div');
+		emptyblock.classList.add("textblock", "empty");
+		emptyblock.id = "emptysidebar"
+		emptyblock.addEventListener('click', function(e) {
+			if (addmodal.classList.contains('close')){
+				addmodal.classList.toggle('close');
+			}
+			ob.target = (e.path[1].id);
+			addmodalHeader.innerHTML = ("add new item in " + ob.target + ":");
+		});
+	sidebar.appendChild(emptyblock);//всегда будет пустой блок + кнопка добавить новый блок в sidebare
+	
+	let emptyblock2 = document.createElement('div');
+		emptyblock2.classList.add("textblock", "empty");
+		emptyblock2.id = "emptyarticle"
+		emptyblock2.addEventListener('click', function(e) {
+			if (addmodal.classList.contains('close')){
+				addmodal.classList.toggle('close');
+			}
+			ob.target = (e.path[1].id);
+			addmodalHeader.innerHTML = ("add new item in " + ob.target + ":");
+		});
+	article.appendChild(emptyblock2);//всегда будет пустой блок + кнопка добавить новый блок в article
 
-function getRandomColor() {
-  var letters = '0123456789ABCDEF'.split('');
-  var color = '#';
-  for (var i = 0; i < 6; i++ ) {
-    color += letters[Math.round(Math.random() * 15)];
-  }
-  return color;
-};
+	let emptyMenu = document.createElement('div');
+		emptyMenu.classList.add("menu", "empty");
+		emptyMenu.id = "emptyMenu";
+		emptyMenu.addEventListener('click', function(e) {
+			if (addmenumodal.classList.contains('close')){
+				addmenumodal.classList.toggle('close');
+			}
 
-function rand() {
-  var c = getRandomColor();
-  div[0].innerText = c;
-  body[0].style.backgroundColor = c;
-  body[0].style.margin = 0;
-  body[0].style.padding = 0;
-  body[0].style.height = "-webkit-fill-available";
-  body[0].style.display = "flex";
-  body[0].style.justifyContent = "center";
-  body[0].style.alignItems = "center";
-  body[0].style.flexDirection = "column";
-  body[0].style.fontSize = "30px";
-  div[0].style.display = "flex";
-  div[0].style.flexDirection = "column";
-  div[0].style.alignItems = "center";
-  div[0].style.color = getRandomColor();
-  var createButton = document.createElement('button');
-  createButton.setAttribute('onclick','rand()');
-  createButton.innerText = 'randomise me'
-  div[0].appendChild(createButton);
-  createButton.style.borderRadius = "100px";
-  createButton.style.border = "0px";
-  createButton.style.height = "100px";
-  createButton.style.fontSize = "30px";
-  createButton.style.backgroundColor = getRandomColor();
-  createButton.style.color = getRandomColor();
-};
-window.onload = rand;
+		// oh.path = e.path;
+		addmenumodalHeader.style = "color: black";
+		addmenumodalHeader.innerHTML = ("add new item in " + e.path[1].id + ":");
+		})
+	nav.appendChild(emptyMenu);
+}
+
+function saveLS(block){//сохраняем блоки
+	let clone = [];
+	let saveArray = [];
+		clone = Array.from(document.getElementById(block).children);
+		clone.forEach(function(item) {
+			if(!item.classList.contains('empty')){
+			saveArray.push(item.outerHTML);
+			};
+		});
+    localStorage[block] = JSON.stringify(saveArray);
+}
+
+function add() {//новый блок
+	localStorage.counter++;
+	let div = document.createElement('div');
+		div.classList.add('textblock');
+		div.id = ("tb" + localStorage.counter);
+	let divEditBtn = document.createElement('button');
+		divEditBtn.classList.add('editButton');
+		divEditBtn.innerHTML = "Edit";
+		div.appendChild(divEditBtn);
+	let divH1 = document.createElement('h1');
+		divH1.id = (div.id + "h1");
+		divH1.innerHTML = aih1.value;
+		div.appendChild(divH1);
+	let divText = document.createElement('div');
+		divText.classList.add('text');
+		divText.id =(div.id + "txt");
+		divText.innerHTML = aitxt.value;
+		div.appendChild(divText);
+	let block = document.getElementById(ob.target);
+		//пустой блок всегда снизу
+		if (ob.target == 'sidebar') {
+			block.insertBefore(div,(document.getElementById('empty' + ob.target)));
+		} else if (ob.target == 'article') {
+			block.insertBefore(div,(document.getElementById('empty' + ob.target)));
+		}
+	saveLS(ob.target);
+	addEvents();
+}
+
+function addMenu() {
+	oh.counter = 0;
+	localStorage.menucounter++
+	addmenumodalHeader.innerHTML = "add new menu item";
+	addmenumodalHeader.style = "color: black";
+
+	if (nav.childElementCount > 4) {
+		addmenumodalHeader.innerHTML = ("sorry, 4 menu items max");
+		addmenumodalHeader.style = "color: red";
+	} else {
+		oh.counter++
+		let div = document.createElement('div');
+			div.classList.add('menu');
+			div.id = ("menu" + localStorage.menucounter);
+		let menuEditBtn = document.createElement('button');
+			menuEditBtn.classList.add('editButton');
+			menuEditBtn.innerHTML = "Edit";
+		div.appendChild(menuEditBtn);
+		let a = document.createElement('a');
+			a.innerHTML = amn.value;
+			a.setAttribute('href', aml.value);
+			div.appendChild(a);
+		nav.insertBefore(div, emptyMenu);
+		saveLS('nav');
+		addEvents();
+	}
+}
+
+function save() {
+	if (o.parent == 'nav') {
+		// let trgt = document.getElementById(o.target);
+		// console.log(document.getElementById(o.target).children[1])
+		// ob.text = document.getElementById(o.target).children[1];
+		// // console.log(o.target);
+		// console.log(o.parent);
+		document.getElementById(o.target).children[1].innerHTML = emn.value
+		document.getElementById(o.target).children[1].setAttribute('href', eml.value);
+		saveLS(o.parent.toString());
+	} else {
+		document.getElementById(o.target + 'h1').innerHTML = eih1.value;
+		document.getElementById(o.target + 'txt').innerHTML = eitxt.value;
+		saveLS(o.parent.toString());
+	}
+}
+
+function remove() {
+	document.getElementById(o.target).remove();
+	saveLS(o.parent.toString());
+	discard();
+}
+
+function discard() {
+	if (!addmodal.classList.contains('close')){
+		addmodal.classList.toggle('close');
+	};
+	if (!addmenumodal.classList.contains('close')){
+		addmenumodal.classList.toggle('close');
+	};
+	if (!editmodal.classList.contains('close')){
+		editmodal.classList.toggle('close');
+	};
+	if (!editheadermodal.classList.contains('close')){
+		editheadermodal.classList.toggle('close');
+	};
+}
